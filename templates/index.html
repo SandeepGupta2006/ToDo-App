@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noted - Note it now, do it later</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='todo.png') }}" type="image/x-icon">
+    <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+
+    <meta name="title" content="Noted - Note it now, do it later">
+    <meta name="description"
+        content="Noted is a smart and simple to-do app that helps you capture tasks instantly and get them done later. Organize your life with ease.">
+</head>
+
+<body>
+
+    <main>
+        <h1 id="legend">Noted</h1>
+
+        <form method="POST">
+            <div class="addDiv">
+                <input id="addTask" type="text" name="new_task" placeholder="Add Task..." autocomplete="off">
+                <button id="addButton" type="submit" name="act" value="create" title="Add Task">➕</button>
+            </div>
+        </form>
+
+        {% if data %}
+        {% for d in data %}
+        <div class="taskDiv">
+            <form method="POST">
+                <input type="hidden" name="id" value="{{d.id}}">
+                <input type="hidden" name="act" value="click_complete">
+                <input type="checkbox" name="complete" value="1" onchange="this.form.submit()" {%if d.completed%}
+                    checked {%endif%}>
+            </form>
+
+            <form method="POST">
+                {% if to_update_id == d.id|string %}
+                <input id="updateTask" type="text" name="updated_task" value="{{d.task}}" autocomplete="off" autofocus>
+                <button type="Submit" name="act" value="save_update_task" title="Save Edited Task">✔</button>
+                {% else %}
+                {% if d.completed %}
+                <input id="taskCompleted" type="text" name="updated_task" value="{{d.task}}" autocomplete="off" readonly
+                    style="text-decoration: line-through;">
+                {% else %}
+                <input type="text" name="updated_task" value="{{d.task}}" autocomplete="off" readonly>
+                <button type="Submit" name="act" value="update" title="Edit Task">✏️</button>
+                {% endif %}
+                {% endif %}
+                <input type="hidden" name="id" value="{{d.id}}">
+                <button type="Submit" name="act" value="delete" title="Delete Task">🗑️</button>
+            </form>
+        </div>
+        {% endfor %}
+        {% else %}
+            No Tasks Added Yet.
+        {% endif %}
+
+    </main>
+
+    <footer class="site-footer">
+        <p>© 2025 • Built & Designed by <a href="https://sandeepgupta.onrender.com/" style="color: inherit;"
+                target="_blank">
+                <b>Sandeep Gupta</b></a>
+        </p>
+    </footer>
+
+</body>
+
+</html>
